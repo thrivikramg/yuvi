@@ -1,0 +1,746 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap');
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #0B0B0F;
+  --bg-secondary: #151821;
+  --text-primary: #FFFFFF;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --border-primary: rgba(255, 255, 255, 0.05);
+  --grid-color: rgba(255, 255, 255, 0.03);
+  
+  --card-bg: rgba(21, 24, 33, 0.65);
+  --card-hover-bg: rgba(21, 24, 33, 0.85);
+  --card-hover-border: rgba(255, 212, 59, 0.25);
+  --card-hover-shadow: rgba(255, 212, 59, 0.08);
+}
+
+:root.light {
+  --bg-primary: #FFFFFF; /* Pure white background base */
+  --bg-secondary: #FFFFFF; /* Pure white background secondary base */
+  --text-primary: #0B0F19; /* High-contrast rich charcoal slate black */
+  --text-secondary: #1F2937; /* High-contrast clear text-secondary slate */
+  --text-muted: #374151; /* High-contrast text-muted slate */
+  --border-primary: rgba(15, 23, 42, 0.08); /* Clean neutral thin border for high-end structure */
+  --grid-color: rgba(15, 23, 42, 0.02); /* Neutral responsive layout grid lines */
+  
+  --card-bg: rgba(255, 255, 255, 0.85); /* Pristine white glass background (removed bluechromatic) */
+  --card-hover-bg: #FFFFFF; /* Polished crisp white on hover */
+  --card-hover-border: #FFD43B; /* Premium gold hover accent matching logo branding */
+  --card-hover-shadow: rgba(15, 23, 42, 0.06); /* Extremely soft elegant drop shadow */
+}
+
+/* Light mode overrides for form inputs & selectors */
+:root.light input,
+:root.light select,
+:root.light textarea {
+  background-color: #FFFFFF !important;
+  color: #0B0F19 !important;
+  border-color: rgba(0, 0, 0, 0.16) !important;
+}
+
+:root.light input::placeholder,
+:root.light textarea::placeholder {
+  color: #6B7280 !important;
+}
+
+:root.light iframe {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Force dark text for yellow components in both modes for optimal contrast */
+.bg-brand-yellow,
+.from-brand-yellow,
+.bg-gradient-to-r.from-brand-yellow {
+  color: #0B0B0F !important;
+}
+
+/* Light mode text overrides to ensure premium contrast */
+:root.light .glass-card h3,
+:root.light .glass-card h2,
+:root.light section h2,
+:root.light section h3,
+:root.light section h4,
+:root.light .logo-text-yuvii,
+:root.light .glass-card span.text-white,
+:root.light button.text-white {
+  color: #0B0F19 !important;
+}
+
+:root.light p.text-brand-gray,
+:root.light span.text-brand-gray,
+:root.light li.text-brand-gray {
+  color: #374151 !important;
+}
+
+:root.light .glass-card {
+  box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Responsive border overrides for light mode to eliminate washed-out/invisible boundaries with clean neutral monochromatic styling */
+:root.light .border-white\/5 {
+  border-color: rgba(15, 23, 42, 0.06) !important;
+}
+:root.light .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+:root.light .border-white\/15 {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+}
+:root.light .border-t-white\/5 {
+  border-top-color: rgba(15, 23, 42, 0.06) !important;
+}
+:root.light .border-b-white\/5 {
+  border-bottom-color: rgba(15, 23, 42, 0.06) !important;
+}
+:root.light .border-y-white\/5 {
+  border-top-color: rgba(15, 23, 42, 0.06) !important;
+  border-bottom-color: rgba(15, 23, 42, 0.06) !important;
+}
+:root.light .border-t {
+  border-top-color: rgba(15, 23, 42, 0.08) !important;
+}
+:root.light .border-b {
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+:root.light .border-y {
+  border-top-color: rgba(15, 23, 42, 0.08) !important;
+  border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Responsive background transparent overlays for elements like inactive buttons or list icons */
+:root.light .bg-white\/5 {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+}
+:root.light .bg-white\/10 {
+  background-color: rgba(15, 23, 42, 0.08) !important;
+}
+:root.light .bg-brand-charcoal\/40 {
+  background-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Dynamic glow adjustments for light mode to prevent washed out text */
+:root.light .text-glow-yellow {
+  text-shadow: 0 0 15px rgba(255, 184, 0, 0.35);
+}
+:root.light .text-glow-blue {
+  text-shadow: 0 0 15px rgba(59, 130, 246, 0.35);
+}
+
+/* 3D Tilted Card showcase styling (React Bits style) */
+.tilted-perspective {
+  perspective: 1200px;
+}
+
+.tilted-card {
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+}
+
+.tilted-card-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 212, 59, 0.12) 0%, transparent 65%);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 5;
+}
+
+:root.light .tilted-card-glare {
+  background: radial-gradient(circle at var(--glare-x, 50%)Var(--glare-y, 50%), rgba(255, 184, 0, 0.15) 0%, transparent 65%);
+}
+
+/* Mobile Tactile Depth Highlights */
+@media (max-w: 768px) {
+  .glass-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-primary);
+    box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.22);
+    /* Inset glass light highlight at the top border */
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent);
+  }
+  
+  :root.light .glass-card {
+    box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.05);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent);
+  }
+}
+
+
+@theme {
+  --color-brand-black: var(--bg-primary);
+  --color-brand-charcoal: var(--bg-secondary);
+  --color-brand-white: var(--text-primary);
+  --color-brand-silver: var(--text-secondary);
+  --color-brand-gray: var(--text-muted);
+  
+  --color-brand-yellow: #FFD43B;
+  --color-brand-gold: #FFB800;
+  --color-brand-blue: #3B82F6;
+  --color-brand-purple: #8B5CF6;
+  --color-brand-emerald: #10B981;
+
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-royal: 'Cinzel', serif;
+  --font-display: 'Playfair Display', serif;
+
+  --animate-float-slow: float-slow 8s ease-in-out infinite;
+  --animate-float-medium: float-medium 6s ease-in-out infinite;
+  --animate-float-fast: float-fast 4s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 4s ease-in-out infinite;
+  --animate-orb-glow: orb-glow 15s ease-in-out infinite;
+
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(1deg); }
+  }
+  @keyframes float-medium {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(-1deg); }
+  }
+  @keyframes float-fast {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 212, 59, 0.2)); }
+    50% { filter: drop-shadow(0 0 35px rgba(255, 212, 59, 0.45)); }
+  }
+  @keyframes orb-glow {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFD43B;
+}
+
+/* Base resets & typography */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.logo-text-yuvii, .font-royal-logo {
+  font-family: var(--font-royal) !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Custom Utilities for Premium Visuals */
+.glass-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-primary);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Elegant sweep-shine glow on card hover */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: 0.75s;
+  pointer-events: none;
+  z-index: 5;
+}
+
+:root.light .glass-card::after {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+}
+
+.glass-card-hover {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-hover:hover {
+  background: var(--card-hover-bg);
+  border-color: var(--card-hover-border);
+  box-shadow: 0 20px 40px 0 var(--card-hover-shadow), 
+              inset 0 0 24px rgba(255, 212, 59, 0.03);
+  transform: translateY(-8px) scale(1.015);
+}
+
+.glass-card-hover:hover::after {
+  left: 150%;
+  transition: 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-hover:active {
+  transform: translateY(-2px) scale(0.99);
+  transition: transform 0.1s ease;
+}
+
+.text-glow-yellow {
+  text-shadow: 0 0 20px rgba(255, 212, 59, 0.3);
+}
+
+.text-glow-blue {
+  text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.bg-gradient-mesh {
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(139, 92, 246, 0.04) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(59, 130, 246, 0.04) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(255, 184, 0, 0.02) 0px, transparent 50%);
+  transition: background-color 0.4s ease;
+}
+
+.glow-orb {
+  filter: blur(120px);
+  opacity: 0.35;
+  mix-blend-mode: plus-lighter;
+  pointer-events: none;
+}
+
+.gold-gradient-border {
+  position: relative;
+}
+
+.gold-gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #FFD43B, #FFB800, transparent, transparent, #FFD43B);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  -webkit-mask-composite: exclude;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Custom styles for Swiper pagination */
+.swiper-pagination-bullet {
+  background: var(--text-secondary) !important;
+  opacity: 0.5 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #FFD43B !important;
+  width: 24px !important;
+  border-radius: 4px !important;
+  opacity: 1 !important;
+}
+
+.swiper-button-next, .swiper-button-prev {
+  color: #FFD43B !important;
+}
+
+/* Light mode adjustments for visual depth and glow consistency */
+:root.light .bg-gradient-mesh {
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(255, 184, 0, 0.05) 0px, transparent 50%);
+}
+
+:root.light .glow-orb {
+  mix-blend-mode: normal;
+  opacity: 0.15;
+}
+
+/* Premium Alternating Midnight Blue Theme Sections for Light Mode */
+:root.light .dark-blue-section {
+  --bg-primary: #0B132B !important; /* Premium Midnight Dark Blue */
+  --bg-secondary: #1C2541 !important; /* Steel Navy Secondary */
+  --text-primary: #F8FAFC !important; /* Bright White Primary */
+  --text-secondary: #E2E8F0 !important; /* Light Slate-200 */
+  --text-muted: #94A3B8 !important; /* Steel Slate-400 */
+  --border-primary: rgba(255, 255, 255, 0.08) !important;
+  --grid-color: rgba(255, 255, 255, 0.02) !important;
+  
+  --card-bg: rgba(255, 255, 255, 0.04) !important; /* Translucent premium frosted white on deep blue (removed bluechromatic) */
+  --card-hover-bg: rgba(255, 255, 255, 0.08) !important;
+  --card-hover-border: #FFD43B !important; /* Premium gold hover border */
+  --card-hover-shadow: rgba(255, 212, 59, 0.15) !important; /* Soft yellow/gold shadow glow */
+
+  background-color: #0B132B !important;
+  color: #F8FAFC !important;
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(255, 184, 0, 0.04) 0px, transparent 50%) !important;
+}
+
+/* High contrast typography overrides specifically inside light mode dark blue sections */
+:root.light .dark-blue-section h2,
+:root.light .dark-blue-section h3,
+:root.light .dark-blue-section h4,
+:root.light .dark-blue-section h5,
+:root.light .dark-blue-section p,
+:root.light .dark-blue-section span,
+:root.light .dark-blue-section li,
+:root.light .dark-blue-section label,
+:root.light .dark-blue-section legend,
+:root.light .dark-blue-section .text-white,
+:root.light .dark-blue-section .text-brand-white,
+:root.light .dark-blue-section .glass-card h3,
+:root.light .dark-blue-section .glass-card h2,
+:root.light .dark-blue-section .glass-card p,
+:root.light .dark-blue-section .glass-card span {
+  color: #F8FAFC !important;
+}
+
+:root.light .dark-blue-section p.text-brand-gray,
+:root.light .dark-blue-section span.text-brand-gray,
+:root.light .dark-blue-section li.text-brand-gray,
+:root.light .dark-blue-section .text-brand-silver,
+:root.light .dark-blue-section .text-brand-gray,
+:root.light .dark-blue-section .text-slate-700,
+:root.light .dark-blue-section .text-slate-600 {
+  color: #94A3B8 !important;
+}
+
+/* Inactive button & selector component depth rules in dark blue sections */
+:root.light .dark-blue-section .bg-slate-100 {
+  background-color: rgba(28, 37, 65, 0.6) !important;
+  color: #E2E8F0 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+:root.light .dark-blue-section .bg-slate-100:hover {
+  background-color: rgba(28, 37, 65, 0.9) !important;
+}
+:root.light .dark-blue-section .border-slate-200\/50,
+:root.light .dark-blue-section .border-slate-200\/30 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+:root.light .dark-blue-section .bg-slate-50 {
+  background-color: rgba(11, 19, 43, 0.4) !important;
+}
+:root.light .dark-blue-section .bg-slate-200 {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Highlight tags and selectors inside dark blue sections */
+:root.light .dark-blue-section .text-brand-yellow,
+:root.light .dark-blue-section .text-glow-yellow {
+  color: #FFD43B !important;
+  text-shadow: 0 0 15px rgba(255, 212, 59, 0.35) !important;
+}
+:root.light .dark-blue-section .text-amber-800,
+:root.light .dark-blue-section .text-amber-700,
+:root.light .dark-blue-section .text-amber-600 {
+  color: #FFD43B !important;
+}
+:root.light .dark-blue-section .bg-amber-500\/10 {
+  background-color: rgba(255, 212, 59, 0.1) !important;
+  border-color: rgba(255, 212, 59, 0.2) !important;
+}
+:root.light .dark-blue-section .border-amber-500\/20 {
+  border-color: rgba(255, 212, 59, 0.2) !important;
+}
+
+/* Custom Outlined Text Strokes to match Mockup Hero heading */
+.text-stroke-yellow {
+  -webkit-text-stroke: 1.5px #FFD43B;
+  color: transparent !important;
+}
+
+:root.light .text-stroke-yellow {
+  -webkit-text-stroke: 1.5px #FFB800;
+  color: transparent !important;
+}
+
+/* ==========================================================================
+   BLUE CHROMATIC OVERRIDES FOR DARK MODE BUTTONS & CALL-TO-ACTIONS
+   ========================================================================== */
+
+/* 1. Primary Buttons: Override brand yellow gradients to Royal/Vibrant Blue (excludes text gradients) */
+html:not(.light) button.bg-gradient-to-r.from-brand-yellow,
+html:not(.light) a.bg-gradient-to-r.from-brand-yellow,
+html:not(.light) .bg-gradient-to-r.from-brand-yellow:not(.bg-clip-text):not(.text-transparent),
+html:not(.light) button.bg-brand-yellow,
+html:not(.light) a.bg-brand-yellow,
+html:not(.light) button.from-brand-yellow,
+html:not(.light) a.from-brand-yellow,
+html:not(.light) .bg-amber-500\/10,
+html:not(.light) button[type="submit"] {
+  background: linear-gradient(135deg, #1E40AF, #3B82F6) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(59, 130, 246, 0.4) !important;
+  box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4) !important;
+  text-shadow: none !important;
+}
+
+/* 2. Hover states for Dark Mode Primary Buttons */
+html:not(.light) button.bg-gradient-to-r.from-brand-yellow:hover,
+html:not(.light) a.bg-gradient-to-r.from-brand-yellow:hover,
+html:not(.light) .bg-gradient-to-r.from-brand-yellow:not(.bg-clip-text):not(.text-transparent):hover,
+html:not(.light) button.bg-brand-yellow:hover,
+html:not(.light) a.bg-brand-yellow:hover,
+html:not(.light) button.from-brand-yellow:hover,
+html:not(.light) a.from-brand-yellow:hover,
+html:not(.light) button[type="submit"]:hover {
+  background: linear-gradient(135deg, #2563EB, #60A5FA) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* 3. Secondary Buttons in Dark Mode: Blue-tinted outline/charcoal style */
+html:not(.light) a[href^="tel:"].dark\:bg-brand-charcoal,
+html:not(.light) button.dark\:bg-brand-charcoal,
+html:not(.light) .bg-slate-100.dark\:bg-brand-charcoal,
+html:not(.light) a.bg-slate-100.dark\:bg-brand-charcoal {
+  background-color: rgba(30, 64, 175, 0.25) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+  color: #FFFFFF !important;
+}
+
+html:not(.light) a[href^="tel:"].dark\:bg-brand-charcoal:hover,
+html:not(.light) button.dark\:bg-brand-charcoal:hover,
+html:not(.light) .bg-slate-100.dark\:bg-brand-charcoal:hover,
+html:not(.light) a.bg-slate-100.dark\:bg-brand-charcoal:hover {
+  background-color: rgba(30, 64, 175, 0.5) !important;
+  border-color: #3B82F6 !important;
+  color: #FFFFFF !important;
+}
+
+/* 4. Swiper Controls and Indicators in Dark Mode */
+html:not(.light) .swiper-pagination-bullet-active {
+  background: #3B82F6 !important;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5) !important;
+}
+html:not(.light) .swiper-button-next,
+html:not(.light) .swiper-button-prev {
+  color: #3B82F6 !important;
+}
+
+/* 5. SVG icon fill corrections within dark mode buttons */
+html:not(.light) button svg,
+html:not(.light) a svg,
+html:not(.light) button svg path,
+html:not(.light) a svg path {
+  stroke: #FFFFFF !important;
+  color: #FFFFFF !important;
+}
+
+/* 6. Form interactive states & Active selector buttons in Dark Mode */
+html:not(.light) label.bg-brand-yellow\/15,
+html:not(.light) label.border-brand-yellow,
+html:not(.light) label.text-amber-800,
+html:not(.light) button.dark\:text-brand-yellow,
+html:not(.light) a.dark\:text-brand-yellow,
+html:not(.light) button.text-brand-yellow,
+html:not(.light) a.text-brand-yellow,
+html:not(.light) .dark\:border-brand-yellow\/30,
+html:not(.light) .border-brand-yellow\/30 {
+  background: rgba(30, 64, 175, 0.25) !important;
+  border-color: #3B82F6 !important;
+  color: #FFFFFF !important;
+}
+
+html:not(.light) button.bg-brand-yellow span.bg-brand-black {
+  background-color: #FFFFFF !important;
+}
+
+/* 7. Quick Estimator range slider thumb color in Dark Mode */
+html:not(.light) input[type="range"]::-webkit-slider-thumb {
+  background: #3B82F6 !important;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6) !important;
+}
+html:not(.light) input[type="range"]::-moz-range-thumb {
+  background: #3B82F6 !important;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* 8. Scrollbar hover color in Dark Mode */
+html:not(.light) ::-webkit-scrollbar-thumb:hover {
+  background: #3B82F6 !important;
+}
+
+/* ==========================================================================
+   BLUE MONOCHROMATIC STYLE FOR LIGHT MODE CARDS (WHY-US & SERVICES)
+   ========================================================================== */
+
+:root.light .why-us-card,
+:root.light .services-card {
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.96) 0%, rgba(219, 234, 254, 0.65) 100%) !important;
+  border-color: rgba(59, 130, 246, 0.18) !important;
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.04) !important;
+}
+
+:root.light .why-us-card:hover,
+:root.light .services-card:hover {
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.98) 0%, rgba(219, 234, 254, 0.85) 100%) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.12), 
+              inset 0 0 24px rgba(59, 130, 246, 0.03) !important;
+}
+
+/* Text typography color overrides for monochromatic blue layout */
+:root.light .why-us-card h3,
+:root.light .services-card h3 {
+  color: #1E3A8A !important; /* Premium rich deep navy blue */
+}
+
+:root.light .why-us-card:hover h3,
+:root.light .services-card:hover h3 {
+  color: #2563EB !important; /* Vibrant monochromatic royal blue on hover */
+}
+
+:root.light .why-us-card p,
+:root.light .services-card p {
+  color: #1E293B !important; /* Highly readable dark slate text */
+}
+
+/* Background hover glare overlay to blue monochromatic tint */
+:root.light .why-us-card .absolute.inset-0.bg-gradient-to-br.from-brand-yellow\/10 {
+  background-image: linear-gradient(to bottom right, rgba(59, 130, 246, 0.16), transparent) !important;
+}
+
+/* Monochromatic blue styling for Icon Wrappers */
+:root.light .why-us-card .w-12.h-12,
+:root.light .services-card .w-12.h-12 {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  border-color: rgba(59, 130, 246, 0.2) !important;
+  color: #2563EB !important;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.12) !important;
+}
+
+:root.light .why-us-card:hover .w-12.h-12,
+:root.light .services-card:hover .w-12.h-12 {
+  background-color: #2563EB !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.35) !important;
+}
+
+/* Services card specific glowing sphere overlay override */
+:root.light .services-card .absolute.-top-12.-right-12 {
+  background-color: rgba(59, 130, 246, 0.04) !important;
+}
+:root.light .services-card:hover .absolute.-top-12.-right-12 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Services card badge styling in monochromatic blue */
+:root.light .services-card span.text-\[10px\] {
+  background-color: rgba(59, 130, 246, 0.06) !important;
+  color: #2563EB !important;
+  border-color: rgba(59, 130, 246, 0.16) !important;
+}
+
+:root.light .services-card:hover span.text-\[10px\] {
+  background-color: #2563EB !important;
+  color: #FFFFFF !important;
+  border-color: #2563EB !important;
+}
+
+/* Services card book link action in monochromatic blue */
+:root.light .services-card .border-t.border-white\/5 {
+  border-top-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+:root.light .services-card .border-t a {
+  color: #2563EB !important;
+}
+
+:root.light .services-card .border-t a:hover {
+  color: #1D4ED8 !important;
+}
+
+/* ==========================================================================
+   MAP OVERLAY BUTTON HIGH CONTRAST TYPOGRAPHY & VISIBILITY OVERRIDES
+   ========================================================================== */
+.map-overlay-button {
+  background-color: #FFD43B !important;
+  color: #0B0F19 !important;
+  border: 1.5px solid #FFB800 !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.map-overlay-button span {
+  color: #0B0F19 !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.map-overlay-button svg {
+  color: #0B0F19 !important;
+  stroke: #0B0F19 !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Hover state */
+.map-overlay-button:hover {
+  background-color: #0B0F19 !important;
+  color: #FFD43B !important;
+  border-color: #FFD43B !important;
+  box-shadow: 0 6px 20px rgba(255, 212, 59, 0.3) !important;
+}
+
+.map-overlay-button:hover span {
+  color: #FFD43B !important;
+}
+
+.map-overlay-button:hover svg {
+  color: #FFD43B !important;
+  stroke: #FFD43B !important;
+}
