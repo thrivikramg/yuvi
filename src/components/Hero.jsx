@@ -9,8 +9,7 @@ import tempoTravellerImg from '../assets/tempo_traveller.png';
 
 export default function Hero() {
   const [selectedVehicle, setSelectedVehicle] = useState('sedan');
-  const [distance, setDistance] = useState(80); // Default distance to BLR Airport (~80km)
-  const [isAc, setIsAc] = useState(true);
+  const [distance, setDistance] = useState(10);
   const [direction, setDirection] = useState(1);
 
   const [tiltStyle, setTiltStyle] = useState({
@@ -56,44 +55,34 @@ export default function Hero() {
     hatchback: { 
       name: 'Hatchback', 
       desc: 'Indica / Vista / Figo',
-      nonAcMin: 150, acMin: 200, 
-      nonAcExtra: 20, acExtra: 25, 
-      allowance: 300,
       image: hatchbackTaxiImg
     },
     sedan: { 
       name: 'Sedan', 
       desc: 'Etios / Dzire / Xcent',
-      nonAcMin: 180, acMin: 230, 
-      nonAcExtra: 22, acExtra: 27, 
-      allowance: 300,
       image: premiumTaxiImg
     },
     suv: { 
       name: 'SUV', 
       desc: 'Ertiga / XUV / SUV',
-      nonAcMin: 220, acMin: 280, 
-      nonAcExtra: 26, acExtra: 32, 
-      allowance: 300,
       image: suvTaxiImg
     },
     innova: { 
       name: 'Innova', 
       desc: 'Toyota Innova',
-      nonAcMin: 280, acMin: 350, 
-      nonAcExtra: 30, acExtra: 35, 
-      allowance: 400,
       image: innovaTaxiImg
     },
     tempo: { 
       name: 'Tempo Traveller', 
       desc: '12+1 Seater Van',
-      nonAcMin: 400, acMin: 500, 
-      nonAcExtra: 38, acExtra: 45, 
-      allowance: 400,
       image: tempoTravellerImg
     }
   };
+
+  // Trip mode pricing
+  const [tripMode, setTripMode] = useState('local'); // local | package | outstation
+  const [selectedPackage, setSelectedPackage] = useState('4hr');
+  const [extraKm, setExtraKm] = useState(0);
 
   const vehicleKeys = ['hatchback', 'sedan', 'suv', 'innova', 'tempo'];
 
@@ -118,16 +107,30 @@ export default function Hero() {
     setSelectedVehicle(vehicleKeys[nextIndex]);
   };
 
+  const packages = {
+    '2hr': { label: '2 Hr', km: 20, base: 600, extraRate: 12 },
+    '4hr': { label: '4 Hr', km: 40, base: 850, extraRate: 12 },
+    '5hr': { label: '5 Hr', km: 50, base: 1200, extraRate: 12 },
+    '8hr': { label: '8 Hr', km: 100, base: 1700, extraRate: 10 },
+  };
+
   const calculateEstimate = () => {
-    const v = vehicles[selectedVehicle];
-    const minRate = isAc ? v.acMin : v.nonAcMin;
-    const extraRate = isAc ? v.acExtra : v.nonAcExtra;
-    
-    let baseFare = minRate;
-    if (distance > 4) {
-      baseFare += (distance - 4) * extraRate;
+    if (tripMode === 'local') {
+      // Local: 4km base ₹150, extra ₹20/km
+      let fare = 150;
+      if (distance > 4) {
+        fare += (distance - 4) * 20;
+      }
+      return fare;
+    } else if (tripMode === 'package') {
+      // Package: base fare + extra km beyond included
+      const pkg = packages[selectedPackage];
+      return pkg.base + (extraKm * pkg.extraRate);
+    } else {
+      // Outstation: ₹10/km, minimum 300km
+      const billableKm = Math.max(distance, 300);
+      return billableKm * 10;
     }
-    return baseFare + v.allowance;
   };
 
   const renderCarCarousel = (isMobile) => {
@@ -348,94 +351,174 @@ export default function Hero() {
               <span className="text-[10px] bg-amber-500/10 dark:bg-brand-yellow/10 text-amber-700 dark:text-brand-yellow border border-amber-500/20 dark:border-brand-yellow/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Hosur Regional</span>
             </div>
 
-            {/* Vehicle selector */}
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
-              {Object.entries(vehicles).map(([key, value]) => (
+            {/* Trip Mode Selector */}
+            <div className="grid grid-cols-3 gap-1.5">
+              {[
+                { key: 'local', label: 'Local' },
+                { key: 'package', label: 'Package' },
+                { key: 'outstation', label: 'Outstation' }
+              ].map((mode) => (
                 <button
-                  key={key}
-                  onClick={() => selectVehicleWithDirection(key)}
-                  className={`py-2 px-1 rounded-xl text-[10px] font-bold transition-all duration-300 cursor-pointer border border-brand-yellow ${
-                    selectedVehicle === key
+                  key={mode.key}
+                  onClick={() => {
+                    setTripMode(mode.key);
+                    if (mode.key === 'local') setDistance(10);
+                    if (mode.key === 'outstation') setDistance(300);
+                  }}
+                  className={`py-2.5 px-1 rounded-xl text-[11px] font-bold transition-all duration-300 cursor-pointer border border-brand-yellow ${
+                    tripMode === mode.key
                       ? 'bg-brand-yellow text-brand-black shadow-[0_4px_12px_rgba(255,212,59,0.25)]'
                       : 'bg-white dark:bg-brand-charcoal text-slate-700 dark:text-brand-silver hover:bg-slate-50 dark:hover:bg-white/5'
                   }`}
                 >
-                  {value.name}
+                  {mode.label}
                 </button>
               ))}
             </div>
 
-            {/* A/C vs Non-A/C Toggle */}
-            <div className="flex items-center justify-between bg-white dark:bg-brand-charcoal/40 p-2.5 rounded-2xl border border-slate-200/30 dark:border-white/5">
-              <span className="text-xs font-semibold text-slate-700 dark:text-brand-silver">Air Conditioning (A/C)</span>
-              <button
-                onClick={() => setIsAc(!isAc)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 cursor-pointer ${
-                  isAc ? 'bg-brand-yellow shadow-[0_0_10px_#FFD43B]' : 'bg-slate-200 dark:bg-brand-gray/50'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-brand-black transition-transform duration-300 ${
-                    isAc ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
+            {/* Dynamic content based on trip mode */}
+            {tripMode === 'local' && (
+              <div className="flex flex-col space-y-3">
+                {/* Rate info */}
+                <div className="flex items-center justify-between bg-white dark:bg-brand-charcoal/40 p-2.5 rounded-2xl border border-slate-200/30 dark:border-white/5">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-brand-silver">Base Fare (4 km)</span>
+                  <span className="text-sm font-extrabold text-amber-600 dark:text-brand-yellow">₹150</span>
+                </div>
+                <div className="flex items-center justify-between bg-white dark:bg-brand-charcoal/40 p-2.5 rounded-2xl border border-slate-200/30 dark:border-white/5">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-brand-silver">Extra per KM</span>
+                  <span className="text-sm font-extrabold text-amber-600 dark:text-brand-yellow">₹20</span>
+                </div>
+                {/* KM Slider */}
+                <div className="flex flex-col space-y-2">
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-brand-silver">
+                    <span>Distance</span>
+                    <span className="text-amber-600 dark:text-brand-yellow font-extrabold text-sm">{distance} KM</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="60"
+                    value={distance}
+                    onChange={(e) => setDistance(Number(e.target.value))}
+                    className="w-full h-1.5 bg-slate-200 dark:bg-brand-charcoal rounded-lg appearance-none cursor-pointer accent-brand-yellow"
+                  />
+                  <div className="flex justify-between text-[10px] text-brand-gray">
+                    <span>1 km</span>
+                    <span>30 km</span>
+                    <span>60 km</span>
+                  </div>
+                </div>
+              </div>
+            )}
 
-            {/* KM Slider */}
-            <div className="flex flex-col space-y-2">
-              <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-brand-silver">
-                <span>Distance Estimate</span>
-                <span className="text-amber-600 dark:text-brand-yellow font-extrabold text-sm">{distance} KM</span>
+            {tripMode === 'package' && (
+              <div className="flex flex-col space-y-3">
+                {/* Package selector */}
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.entries(packages).map(([key, pkg]) => (
+                    <button
+                      key={key}
+                      onClick={() => setSelectedPackage(key)}
+                      className={`py-2.5 px-2 rounded-xl text-center font-bold cursor-pointer flex flex-col justify-center items-center transition-all border border-brand-yellow ${
+                        selectedPackage === key
+                          ? 'bg-brand-yellow/15 border-brand-yellow text-amber-800 dark:text-brand-yellow shadow-inner'
+                          : 'bg-white dark:bg-brand-charcoal border-slate-200/50 dark:border-white/5 text-slate-700 dark:text-brand-silver hover:bg-slate-50 dark:hover:bg-white/5'
+                      }`}
+                    >
+                      <span className="text-xs font-black">{pkg.label} / {pkg.km} KM</span>
+                      <span className="text-[10px] text-brand-gray font-semibold mt-0.5">₹{pkg.base}</span>
+                    </button>
+                  ))}
+                </div>
+                {/* Extra KM input */}
+                <div className="flex flex-col space-y-2">
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-brand-silver">
+                    <span>Extra KM beyond {packages[selectedPackage].km} km</span>
+                    <span className="text-amber-600 dark:text-brand-yellow font-extrabold text-sm">{extraKm} KM</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={extraKm}
+                    onChange={(e) => setExtraKm(Number(e.target.value))}
+                    className="w-full h-1.5 bg-slate-200 dark:bg-brand-charcoal rounded-lg appearance-none cursor-pointer accent-brand-yellow"
+                  />
+                  <div className="flex justify-between text-[10px] text-brand-gray">
+                    <span>0 km</span>
+                    <span>Extra @ ₹{packages[selectedPackage].extraRate}/km</span>
+                    <span>100 km</span>
+                  </div>
+                </div>
               </div>
-              <input
-                type="range"
-                min="4"
-                max="250"
-                value={distance}
-                onChange={(e) => setDistance(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-200 dark:bg-brand-charcoal rounded-lg appearance-none cursor-pointer accent-brand-yellow"
-              />
-              <div className="flex justify-between text-[10px] text-brand-gray">
-                <span>Min (4km)</span>
-                <span>BLR Airport (~80km)</span>
-                <span>Outstation (250km)</span>
+            )}
+
+            {tripMode === 'outstation' && (
+              <div className="flex flex-col space-y-3">
+                {/* Rate info */}
+                <div className="flex items-center justify-between bg-white dark:bg-brand-charcoal/40 p-2.5 rounded-2xl border border-slate-200/30 dark:border-white/5">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-brand-silver">Rate per KM</span>
+                  <span className="text-sm font-extrabold text-amber-600 dark:text-brand-yellow">₹10</span>
+                </div>
+                <div className="flex items-center justify-between bg-white dark:bg-brand-charcoal/40 p-2.5 rounded-2xl border border-slate-200/30 dark:border-white/5">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-brand-silver">Minimum Billing</span>
+                  <span className="text-sm font-extrabold text-amber-600 dark:text-brand-yellow">300 KM</span>
+                </div>
+                {/* KM Slider */}
+                <div className="flex flex-col space-y-2">
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-brand-silver">
+                    <span>Total Distance</span>
+                    <span className="text-amber-600 dark:text-brand-yellow font-extrabold text-sm">{distance} KM</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="100"
+                    max="1000"
+                    step="10"
+                    value={distance}
+                    onChange={(e) => setDistance(Number(e.target.value))}
+                    className="w-full h-1.5 bg-slate-200 dark:bg-brand-charcoal rounded-lg appearance-none cursor-pointer accent-brand-yellow"
+                  />
+                  <div className="flex justify-between text-[10px] text-brand-gray">
+                    <span>100 km</span>
+                    <span>500 km</span>
+                    <span>1000 km</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Fare Result */}
             <div className="pt-3 border-t border-slate-200/60 dark:border-white/5 flex items-center justify-between">
               <div className="flex flex-col text-left">
-                <span className="text-xs text-brand-gray font-semibold">Estimated Price</span>
-                <span className="text-[9px] text-brand-gray/85">*Tolls, Parking & Night charges apply extra</span>
+                <span className="text-xs text-brand-gray font-semibold">Estimated Fare</span>
+                <span className="text-[9px] text-brand-gray/85">
+                  {tripMode === 'outstation' && distance < 300 ? '*Min 300 km billed' : '*Tolls & parking extra'}
+                </span>
               </div>
               <div className="text-right">
                 <span className="text-2xl font-black text-brand-white text-glow-yellow">
                   ₹{calculateEstimate()}
                 </span>
-                <span className="block text-[9px] text-amber-700 dark:text-brand-yellow font-semibold">Includes Driver Allowance (₹{vehicles[selectedVehicle].allowance})</span>
+                <span className="block text-[9px] text-amber-700 dark:text-brand-yellow font-semibold">
+                  {tripMode === 'local' && `Base ₹150 + ${Math.max(0, distance - 4)} extra km × ₹20`}
+                  {tripMode === 'package' && `${packages[selectedPackage].label} Package + ${extraKm} extra km`}
+                  {tripMode === 'outstation' && `${Math.max(distance, 300)} km × ₹10/km`}
+                </span>
               </div>
             </div>
 
             <a
-              href={`#contact?distance=${distance}&vehicle=${selectedVehicle}&ac=${isAc}`}
+              href="#contact"
               onClick={(e) => {
                 e.preventDefault();
                 const formEl = document.getElementById('contact');
                 if (formEl) {
-                  const distanceInput = document.getElementById('pickup-estimate-km');
                   const messageInput = document.getElementById('booking-message');
-                  const vehicleSelect = document.querySelector('select[name="vehicle"]');
-                  const acSelect = document.querySelector('select[name="ac_service"]');
-                  
-                  if (distanceInput) distanceInput.value = distance;
-                  if (vehicleSelect) vehicleSelect.value = selectedVehicle;
-                  if (acSelect) acSelect.value = isAc ? 'ac' : 'non-ac';
-                  
                   if (messageInput) {
-                    messageInput.value = `Estimated fare booking request. Distance: ${distance} KM. Vehicle: ${vehicles[selectedVehicle].name}. Service: ${isAc ? 'A/C' : 'Non-A/C'}. Est. Total: ₹${calculateEstimate()}`;
+                    const modeLabel = tripMode === 'local' ? 'Local' : tripMode === 'package' ? `Package (${packages[selectedPackage].label})` : 'Outstation';
+                    messageInput.value = `Fare estimate: ${modeLabel}. Distance: ${tripMode === 'package' ? packages[selectedPackage].km + '+' + extraKm : distance} KM. Est. Total: ₹${calculateEstimate()}`;
                   }
-                  
                   formEl.scrollIntoView({ behavior: 'smooth' });
                 }
               }}

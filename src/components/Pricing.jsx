@@ -1,76 +1,21 @@
 import { useState } from 'react';
-import { Moon, Check, Coins, Milestone } from 'lucide-react';
+import { Moon, Check, Coins, Milestone, MapPin, Clock, Route } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Pricing() {
-  const [isAc, setIsAc] = useState(true);
+  const [activeTab, setActiveTab] = useState('local');
 
-  const fleets = [
-    {
-      vehicle: 'Hatchback Cabs',
-      subTitle: 'Indica / Vista / Figo',
-      type: 'Tata Tiago, Indica, Vista, Swift',
-      nonAcMin: 150, acMin: 200,
-      nonAcExtra: 20, acExtra: 25,
-      allowance: '₹300 / Day',
-      seating: '4 + 1 Passengers',
-      suitcases: '1 - 2 Bags',
-      bestFor: 'Budget-friendly local commutes & swift city runs.',
-      tag: 'Economical Local',
-      isPopular: false
-    },
-    {
-      vehicle: 'Premium Sedan Cabs',
-      subTitle: 'Etios / Dzire / Xcent',
-      type: 'Maruti Dzire, Hyundai Xcent, Toyota Etios',
-      nonAcMin: 180, acMin: 230,
-      nonAcExtra: 22, acExtra: 27,
-      allowance: '₹300 / Day',
-      seating: '4 + 1 Passengers',
-      suitcases: '2 - 3 Bags',
-      bestFor: 'Luxury airport runs, business trips & family outstation runs.',
-      tag: 'Most Popular',
-      isPopular: true
-    },
-    {
-      vehicle: 'Executive SUV Cabs',
-      subTitle: 'Ertiga / XUV / SUV',
-      type: 'Maruti Ertiga, Mahindra XUV, Renault Triber',
-      nonAcMin: 220, acMin: 280,
-      nonAcExtra: 26, acExtra: 32,
-      allowance: '₹300 / Day',
-      seating: '6 + 1 Passengers',
-      suitcases: '3 - 4 Bags',
-      bestFor: 'Spacious medium-group family trips & religious tours.',
-      tag: 'Spacious Comfort',
-      isPopular: false
-    },
-    {
-      vehicle: 'Toyota Innova Cabs',
-      subTitle: 'Toyota Innova',
-      type: 'Premium Gold-Standard Luxury MPV',
-      nonAcMin: 280, acMin: 350,
-      nonAcExtra: 30, acExtra: 35,
-      allowance: '₹400 / Day',
-      seating: '7 + 1 Passengers',
-      suitcases: '4 - 5 Bags',
-      bestFor: 'VIP corporate transits, large family groups & elite tours.',
-      tag: 'Premium Luxury',
-      isPopular: false
-    },
-    {
-      vehicle: 'Tempo Traveller',
-      subTitle: '12+1 Seater Coach',
-      type: 'Large Multi-Passenger Tourer Coach',
-      nonAcMin: 400, acMin: 500,
-      nonAcExtra: 38, acExtra: 45,
-      allowance: '₹400 / Day',
-      seating: '12 + 1 Passengers',
-      suitcases: '8 - 10 Bags',
-      bestFor: 'Mega family excursions, weddings, pilgrim groups & team outings.',
-      tag: 'Mega Group Fleet',
-      isPopular: false
-    }
+  const tabs = [
+    { key: 'local', label: 'Local', icon: MapPin },
+    { key: 'package', label: 'Packages', icon: Clock },
+    { key: 'outstation', label: 'Outstation', icon: Route },
+  ];
+
+  const packagePlans = [
+    { duration: '2 Hours', km: '20 KM', base: '₹600', extraRate: '₹12/km', isPopular: false, tag: 'Quick Trips' },
+    { duration: '4 Hours', km: '40 KM', base: '₹850', extraRate: '₹12/km', isPopular: true, tag: 'Most Popular' },
+    { duration: '5 Hours', km: '50 KM', base: '₹1,200', extraRate: '₹12/km', isPopular: false, tag: 'Half Day' },
+    { duration: '8 Hours', km: '100 KM', base: '₹1,700', extraRate: '₹10/km', isPopular: false, tag: 'Full Day' },
   ];
 
   return (
@@ -85,161 +30,264 @@ export default function Pricing() {
         <div className="text-center max-w-2xl mx-auto mb-12 flex flex-col space-y-4">
           <span className="text-xs text-brand-yellow font-extrabold tracking-widest uppercase">Transparent Regional Pricing</span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-white tracking-tight leading-tight">
-            Premium Fleet & <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow to-brand-gold text-glow-yellow">Fares Table</span>
+            Simple & <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-yellow to-brand-gold text-glow-yellow">Transparent Fares</span>
           </h2>
           <p className="text-sm sm:text-base text-brand-gray/90 leading-relaxed">
-            No hidden costs. No surprises. Our flat regional rates are calculated systematically to provide total clarity for your budget.
+            No hidden costs. No surprises. Choose from Local, Package, or Outstation rates — all designed for total clarity.
           </p>
         </div>
 
-        {/* Global A/C vs Non-A/C selector switch */}
-        <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4 mb-16">
-          <span className="text-sm font-bold text-brand-silver">Select Service Class:</span>
+        {/* Tab Selector */}
+        <div className="flex items-center justify-center mb-16">
           <div className="inline-flex p-1 bg-slate-100 dark:bg-brand-charcoal border border-slate-200/50 dark:border-white/5 rounded-2xl">
-            <button
-              onClick={() => setIsAc(false)}
-              className={`px-5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                !isAc 
-                  ? 'bg-brand-yellow text-brand-black shadow-[0_4px_12px_rgba(255,212,59,0.15)] dark:bg-brand-charcoal dark:border dark:border-brand-yellow/30 dark:text-brand-yellow dark:shadow-none' 
-                  : 'text-slate-600 dark:text-brand-silver hover:text-slate-800 dark:hover:text-white'
-              }`}
-            >
-              Non-A/C Service
-            </button>
-            <button
-              onClick={() => setIsAc(true)}
-              className={`px-5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
-                isAc 
-                  ? 'bg-brand-yellow text-brand-black shadow-[0_4px_12px_rgba(255,212,59,0.15)] dark:bg-brand-charcoal dark:border dark:border-brand-yellow/30 dark:text-brand-yellow dark:shadow-none' 
-                  : 'text-slate-600 dark:text-brand-silver hover:text-slate-800 dark:hover:text-white'
-              }`}
-            >
-              Air Conditioned (A/C)
-            </button>
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                    activeTab === tab.key
+                      ? 'bg-brand-yellow text-brand-black shadow-[0_4px_12px_rgba(255,212,59,0.15)] dark:bg-brand-charcoal dark:border dark:border-brand-yellow/30 dark:text-brand-yellow dark:shadow-none'
+                      : 'text-slate-600 dark:text-brand-silver hover:text-slate-800 dark:hover:text-white'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Pricing Cards Grid - 5 Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 items-stretch mb-16">
-          {fleets.map((fleet, idx) => {
-            const minFare = isAc ? fleet.acMin : fleet.nonAcMin;
-            const extraKm = isAc ? fleet.acExtra : fleet.nonAcExtra;
+        {/* LOCAL TAB */}
+        {activeTab === 'local' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="max-w-2xl mx-auto"
+          >
+            <div className="glass-card gold-gradient-border p-8 rounded-3xl border border-white/5">
+              <div className="text-center mb-6">
+                <span className="inline-block text-[9px] uppercase font-bold text-amber-700 dark:text-brand-yellow tracking-wider mb-2 bg-amber-500/10 dark:bg-brand-yellow/5 border border-amber-500/20 dark:border-brand-yellow/15 px-3 py-1 rounded-full">
+                  Local Driving
+                </span>
+                <h3 className="text-2xl font-black text-brand-white mt-2">City & Local Rides</h3>
+                <p className="text-xs text-brand-gray/90 mt-1">For trips within Hosur city limits and nearby areas</p>
+              </div>
 
-            return (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className={`group relative flex flex-col justify-between p-6 rounded-3xl border transition-all duration-400 cursor-default ${
-                  fleet.isPopular
-                    ? 'glass-card glass-card-hover gold-gradient-border shadow-[0_15px_30px_rgba(255,212,59,0.08)] scale-100 xl:scale-[1.02]'
-                    : 'glass-card glass-card-hover border-white/5'
-                }`}
-              >
-                {fleet.isPopular && (
-                  <div className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-brand-yellow to-brand-gold text-brand-black px-3.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">
-                    {fleet.tag}
-                  </div>
-                )}
-
-                <div className="flex flex-col space-y-5">
-                  {/* Header */}
-                  <div className="text-left">
-                    {!fleet.isPopular && (
-                      <span className="inline-block text-[9px] uppercase font-bold text-amber-700 dark:text-brand-yellow tracking-wider mb-1 bg-amber-500/10 dark:bg-brand-yellow/5 border border-amber-500/20 dark:border-brand-yellow/15 px-2 py-0.5 rounded-full">
-                        {fleet.tag}
-                      </span>
-                    )}
-                    <h3 className="text-lg font-black text-brand-white group-hover:text-brand-yellow transition-colors duration-300 line-clamp-1">{fleet.vehicle}</h3>
-                    <p className="text-[10px] text-brand-silver font-semibold mt-0.5 line-clamp-1">{fleet.subTitle}</p>
-                    <p className="text-[9px] text-brand-gray font-medium leading-none mt-1 line-clamp-1">{fleet.type}</p>
-                  </div>
-
-                  {/* Pricing block */}
-                  <div className="flex flex-col space-y-1 py-3 border-y border-white/5 text-left">
-                    <div className="flex items-baseline space-x-1">
-                      <span className="text-3xl font-black text-brand-white text-glow-yellow">₹{extraKm}</span>
-                      <span className="text-[10px] font-semibold text-brand-silver">/ KM</span>
-                    </div>
-                    <div className="text-[10px] text-brand-gray font-semibold">
-                      Min Fare: <strong className="text-brand-white">₹{minFare}</strong> (4 Kms)
-                    </div>
-                  </div>
-
-                  {/* Specifications Checklist */}
-                  <ul className="flex flex-col space-y-2.5 text-left text-xs text-brand-silver/95 font-medium">
-                    <li className="flex items-center space-x-2">
-                      <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
-                        <Check className="w-3 h-3" />
-                      </div>
-                      <span className="text-[11px] line-clamp-1">Allowance: <strong className="text-brand-white">{fleet.allowance}</strong></span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
-                        <Check className="w-3 h-3" />
-                      </div>
-                      <span className="text-[11px] line-clamp-1">Capacity: <strong className="text-brand-white">{fleet.seating}</strong></span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
-                        <Check className="w-3 h-3" />
-                      </div>
-                      <span className="text-[11px] line-clamp-1">Luggage: <strong className="text-brand-white">{fleet.suitcases}</strong></span>
-                    </li>
-                    <li className="flex items-start space-x-2 pt-1 border-t border-white/5">
-                      <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0 mt-0.5">
-                        <Check className="w-3 h-3" />
-                      </div>
-                      <span className="text-[10px] leading-relaxed text-brand-gray/95 font-medium line-clamp-3">{fleet.bestFor}</span>
-                    </li>
-                  </ul>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className="glass-card p-5 rounded-2xl border border-white/5 text-center">
+                  <span className="text-[10px] text-brand-gray uppercase font-bold tracking-wider block mb-1">Base Fare</span>
+                  <span className="text-3xl font-black text-brand-white text-glow-yellow">₹150</span>
+                  <span className="text-[10px] text-brand-silver font-semibold block mt-1">First 4 KM included</span>
                 </div>
-
-                {/* Action Button */}
-                <div className="mt-6 pt-3">
-                  <a
-                    href="#contact"
-                    onClick={() => {
-                      const formEl = document.getElementById('contact');
-                      if (formEl) {
-                        const vehicleSelect = document.querySelector('select[name="vehicle"]');
-                        const acSelect = document.querySelector('select[name="ac_service"]');
-                        const messageInput = document.getElementById('booking-message');
-                        
-                        let selectVal = 'sedan';
-                        if (idx === 0) selectVal = 'hatchback';
-                        else if (idx === 1) selectVal = 'sedan';
-                        else if (idx === 2) selectVal = 'suv';
-                        else if (idx === 3) selectVal = 'innova';
-                        else if (idx === 4) selectVal = 'tempo';
-
-                        if (vehicleSelect) vehicleSelect.value = selectVal;
-                        if (acSelect) acSelect.value = isAc ? 'ac' : 'non-ac';
-
-                        if (messageInput) {
-                          messageInput.value = `I'd like to book a ${fleet.vehicle} (${fleet.subTitle}) cab with ${isAc ? 'A/C' : 'Non-A/C'} service. Please confirm availability.`;
-                        }
-                        formEl.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }}
-                    className={`w-full flex items-center justify-center py-2.5 rounded-2xl font-extrabold text-xs tracking-wide transition-all duration-300 cursor-pointer ${
-                      fleet.isPopular
-                        ? 'bg-gradient-to-r from-brand-yellow to-brand-gold text-brand-black shadow-[0_4px_12px_rgba(255,212,59,0.2)] hover:shadow-[0_4px_20px_rgba(255,212,59,0.4)]'
-                        : 'bg-slate-100 dark:bg-brand-charcoal hover:bg-slate-200/80 dark:hover:bg-brand-charcoal/80 text-slate-700 dark:text-brand-white border border-slate-200/50 dark:border-white/5 hover:border-brand-yellow/30 dark:hover:border-brand-yellow/30'
-                    }`}
-                  >
-                    Book Fleet Class
-                  </a>
+                <div className="glass-card p-5 rounded-2xl border border-white/5 text-center">
+                  <span className="text-[10px] text-brand-gray uppercase font-bold tracking-wider block mb-1">Extra Per KM</span>
+                  <span className="text-3xl font-black text-brand-white text-glow-yellow">₹20</span>
+                  <span className="text-[10px] text-brand-silver font-semibold block mt-1">After first 4 KM</span>
                 </div>
-              </motion.div>
-            );
-          })}
-        </div>
+                <div className="glass-card p-5 rounded-2xl border border-white/5 text-center">
+                  <span className="text-[10px] text-brand-gray uppercase font-bold tracking-wider block mb-1">Minimum Distance</span>
+                  <span className="text-3xl font-black text-brand-white text-glow-yellow">4 KM</span>
+                  <span className="text-[10px] text-brand-silver font-semibold block mt-1">Base fare applies</span>
+                </div>
+              </div>
 
-        {/* Additional Terms Cards (Tolls, Driver Night Charges, etc.) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+              <div className="flex flex-col space-y-2 text-center">
+                <ul className="flex flex-wrap justify-center gap-3 text-[11px] text-brand-silver font-semibold">
+                  <li className="flex items-center space-x-1.5">
+                    <div className="w-4 h-4 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
+                      <Check className="w-2.5 h-2.5" />
+                    </div>
+                    <span>24/7 Availability</span>
+                  </li>
+                  <li className="flex items-center space-x-1.5">
+                    <div className="w-4 h-4 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
+                      <Check className="w-2.5 h-2.5" />
+                    </div>
+                    <span>No Surge Pricing</span>
+                  </li>
+                  <li className="flex items-center space-x-1.5">
+                    <div className="w-4 h-4 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
+                      <Check className="w-2.5 h-2.5" />
+                    </div>
+                    <span>Professional Drivers</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-6 pt-4">
+                <a
+                  href="#contact"
+                  className="w-full flex items-center justify-center py-3.5 rounded-2xl bg-gradient-to-r from-brand-yellow to-brand-gold text-brand-black font-extrabold text-sm tracking-wide shadow-[0_4px_12px_rgba(255,212,59,0.2)] hover:shadow-[0_4px_20px_rgba(255,212,59,0.4)] transition-all cursor-pointer"
+                >
+                  Book a Local Ride
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* PACKAGES TAB */}
+        {activeTab === 'package' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch mb-16">
+              {packagePlans.map((pkg, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  className={`group relative flex flex-col justify-between p-6 rounded-3xl border transition-all duration-400 cursor-default ${
+                    pkg.isPopular
+                      ? 'glass-card glass-card-hover gold-gradient-border shadow-[0_15px_30px_rgba(255,212,59,0.08)] scale-100 lg:scale-[1.03]'
+                      : 'glass-card glass-card-hover border-white/5'
+                  }`}
+                >
+                  {pkg.isPopular && (
+                    <div className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-brand-yellow to-brand-gold text-brand-black px-3.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">
+                      {pkg.tag}
+                    </div>
+                  )}
+
+                  <div className="flex flex-col space-y-5">
+                    <div className="text-left">
+                      {!pkg.isPopular && (
+                        <span className="inline-block text-[9px] uppercase font-bold text-amber-700 dark:text-brand-yellow tracking-wider mb-1 bg-amber-500/10 dark:bg-brand-yellow/5 border border-amber-500/20 dark:border-brand-yellow/15 px-2 py-0.5 rounded-full">
+                          {pkg.tag}
+                        </span>
+                      )}
+                      <h3 className="text-xl font-black text-brand-white group-hover:text-brand-yellow transition-colors duration-300">
+                        {pkg.duration}
+                      </h3>
+                      <p className="text-[11px] text-brand-silver font-semibold mt-0.5">{pkg.km} included</p>
+                    </div>
+
+                    {/* Pricing block */}
+                    <div className="flex flex-col space-y-1 py-3 border-y border-white/5 text-left">
+                      <div className="flex items-baseline space-x-1">
+                        <span className="text-3xl font-black text-brand-white text-glow-yellow">{pkg.base}</span>
+                      </div>
+                      <div className="text-[10px] text-brand-gray font-semibold">
+                        Extra KM: <strong className="text-brand-white">{pkg.extraRate}</strong>
+                      </div>
+                    </div>
+
+                    {/* Features */}
+                    <ul className="flex flex-col space-y-2.5 text-left text-xs text-brand-silver/95 font-medium">
+                      <li className="flex items-center space-x-2">
+                        <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
+                          <Check className="w-3 h-3" />
+                        </div>
+                        <span className="text-[11px]">Duration: <strong className="text-brand-white">{pkg.duration}</strong></span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
+                          <Check className="w-3 h-3" />
+                        </div>
+                        <span className="text-[11px]">Included: <strong className="text-brand-white">{pkg.km}</strong></span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
+                          <Check className="w-3 h-3" />
+                        </div>
+                        <span className="text-[11px]">Multiple stops allowed</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="mt-6 pt-3">
+                    <a
+                      href="#contact"
+                      className={`w-full flex items-center justify-center py-2.5 rounded-2xl font-extrabold text-xs tracking-wide transition-all duration-300 cursor-pointer ${
+                        pkg.isPopular
+                          ? 'bg-gradient-to-r from-brand-yellow to-brand-gold text-brand-black shadow-[0_4px_12px_rgba(255,212,59,0.2)] hover:shadow-[0_4px_20px_rgba(255,212,59,0.4)]'
+                          : 'bg-slate-100 dark:bg-brand-charcoal hover:bg-slate-200/80 dark:hover:bg-brand-charcoal/80 text-slate-700 dark:text-brand-white border border-slate-200/50 dark:border-white/5 hover:border-brand-yellow/30 dark:hover:border-brand-yellow/30'
+                      }`}
+                    >
+                      Book {pkg.duration} Package
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* OUTSTATION TAB */}
+        {activeTab === 'outstation' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="max-w-2xl mx-auto"
+          >
+            <div className="glass-card gold-gradient-border p-8 rounded-3xl border border-white/5">
+              <div className="text-center mb-6">
+                <span className="inline-block text-[9px] uppercase font-bold text-amber-700 dark:text-brand-yellow tracking-wider mb-2 bg-amber-500/10 dark:bg-brand-yellow/5 border border-amber-500/20 dark:border-brand-yellow/15 px-3 py-1 rounded-full">
+                  Outstation Travel
+                </span>
+                <h3 className="text-2xl font-black text-brand-white mt-2">Long Distance Rides</h3>
+                <p className="text-xs text-brand-gray/90 mt-1">For intercity trips and outstation journeys from Hosur</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div className="glass-card p-5 rounded-2xl border border-white/5 text-center">
+                  <span className="text-[10px] text-brand-gray uppercase font-bold tracking-wider block mb-1">Per KM Rate</span>
+                  <span className="text-3xl font-black text-brand-white text-glow-yellow">₹10</span>
+                  <span className="text-[10px] text-brand-silver font-semibold block mt-1">Flat rate per kilometer</span>
+                </div>
+                <div className="glass-card p-5 rounded-2xl border border-white/5 text-center">
+                  <span className="text-[10px] text-brand-gray uppercase font-bold tracking-wider block mb-1">Minimum Billing</span>
+                  <span className="text-3xl font-black text-brand-white text-glow-yellow">300 KM</span>
+                  <span className="text-[10px] text-brand-silver font-semibold block mt-1">₹3,000 minimum fare</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-2 text-center">
+                <ul className="flex flex-wrap justify-center gap-3 text-[11px] text-brand-silver font-semibold">
+                  <li className="flex items-center space-x-1.5">
+                    <div className="w-4 h-4 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
+                      <Check className="w-2.5 h-2.5" />
+                    </div>
+                    <span>Tolls & parking extra</span>
+                  </li>
+                  <li className="flex items-center space-x-1.5">
+                    <div className="w-4 h-4 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
+                      <Check className="w-2.5 h-2.5" />
+                    </div>
+                    <span>Driver allowance included</span>
+                  </li>
+                  <li className="flex items-center space-x-1.5">
+                    <div className="w-4 h-4 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
+                      <Check className="w-2.5 h-2.5" />
+                    </div>
+                    <span>Clean AC fleet</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-6 pt-4">
+                <a
+                  href="#contact"
+                  className="w-full flex items-center justify-center py-3.5 rounded-2xl bg-gradient-to-r from-brand-yellow to-brand-gold text-brand-black font-extrabold text-sm tracking-wide shadow-[0_4px_12px_rgba(255,212,59,0.2)] hover:shadow-[0_4px_20px_rgba(255,212,59,0.4)] transition-all cursor-pointer"
+                >
+                  Book Outstation Ride
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Additional Terms Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mt-16">
           {/* Toll info */}
           <div className="glass-card glass-card-hover p-6 rounded-2xl border border-white/5 flex space-x-4 items-start shadow-md">
             <div className="p-3 bg-brand-yellow/5 border border-brand-yellow/10 rounded-xl text-brand-yellow flex-shrink-0">
@@ -261,12 +309,12 @@ export default function Pricing() {
             <div>
               <h4 className="text-sm font-bold text-brand-white uppercase tracking-wider">Driver Night Allowance</h4>
               <p className="text-xs text-brand-gray/95 mt-1 leading-relaxed font-semibold">
-                An additional driver night allowance (typically ₹300 for cabs, ₹400 for tempo/innova) applies for journeys scheduled between 10:00 PM and 6:00 AM.
+                An additional driver night allowance applies for journeys scheduled between 10:00 PM and 6:00 AM.
               </p>
             </div>
           </div>
 
-          {/* Outstation travel */}
+          {/* Outstation minimums */}
           <div className="glass-card glass-card-hover p-6 rounded-2xl border border-white/5 flex space-x-4 items-start shadow-md">
             <div className="p-3 bg-brand-yellow/5 border border-brand-yellow/10 rounded-xl text-brand-yellow flex-shrink-0">
               <Milestone className="w-5 h-5" />
@@ -274,7 +322,7 @@ export default function Pricing() {
             <div>
               <h4 className="text-sm font-bold text-brand-white uppercase tracking-wider">Outstation Minimums</h4>
               <p className="text-xs text-brand-gray/95 mt-1 leading-relaxed font-semibold">
-                Round-trip outstation journeys carry a minimum billing average of 250 Kilometers per calendar day.
+                Outstation journeys carry a minimum billing of 300 KM. Fare: ₹10/km.
               </p>
             </div>
           </div>
