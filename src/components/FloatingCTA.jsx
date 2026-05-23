@@ -43,10 +43,10 @@ export default function FloatingCTA() {
         className="fixed bottom-0 left-0 w-full z-45 bg-white/95 dark:bg-brand-black/90 backdrop-blur-md border-t border-slate-200/60 dark:border-white/10 py-3 px-4 md:hidden shadow-[0_-5px_20px_rgba(0,0,0,0.06)]"
       >
         <div className="flex space-x-3 w-full max-w-lg mx-auto">
-          {/* Call Now Button - Royal Blue */}
+          {/* Call Now Button */}
           <a
             href="tel:+918792273625"
-            className="flex-1 flex items-center justify-center space-x-2 py-3.5 rounded-full bg-[#1656ec] hover:bg-blue-700 text-white font-extrabold text-sm tracking-wide shadow-[0_4px_12px_rgba(22,86,236,0.2)] active:scale-95 transition-all cursor-pointer"
+            className="flex-1 flex items-center justify-center space-x-2 py-3.5 rounded-full bg-brand-black hover:bg-brand-charcoal text-white font-extrabold text-sm tracking-wide shadow-[0_4px_12px_rgba(0,0,0,0.15)] border border-white/10 active:scale-95 transition-all cursor-pointer"
           >
             <Phone className="w-4 h-4 fill-white text-white" />
             <span>Call Now</span>

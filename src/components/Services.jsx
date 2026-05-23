@@ -7,7 +7,7 @@ export default function Services() {
       icon: Plane,
       title: 'Airport Taxi Transfers',
       description: 'Staggered pickup and dropoff services between Hosur and Kempegowda International Airport Bengaluru (BLR). We ensure absolute timeliness.',
-      accent: 'border-brand-blue/30',
+      accent: 'border-brand-yellow/30',
       badge: 'BLR Airport Dedicated'
     },
     {
@@ -42,7 +42,7 @@ export default function Services() {
       icon: RefreshCcw,
       title: 'Round Trip Taxi Packages',
       description: 'Book a driver and car for multiple days. Enjoy maximum flexibility, multiple stops, and low waiting costs for returns.',
-      accent: 'border-brand-blue/30',
+      accent: 'border-brand-yellow/30',
       badge: 'Multi-Day Touring'
     }
   ];
