@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Moon, Check, Coins, Milestone, MapPin, Clock, Route } from 'lucide-react';
+import { Moon, Check, Coins, Milestone, MapPin, Route } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Pricing() {
@@ -7,16 +7,10 @@ export default function Pricing() {
 
   const tabs = [
     { key: 'local', label: 'Local', icon: MapPin },
-    { key: 'package', label: 'Packages', icon: Clock },
     { key: 'outstation', label: 'Outstation', icon: Route },
   ];
 
-  const packagePlans = [
-    { duration: '2 Hours', km: '20 KM', base: '₹600', extraRate: '₹12/km', isPopular: false, tag: 'Quick Trips' },
-    { duration: '4 Hours', km: '40 KM', base: '₹850', extraRate: '₹12/km', isPopular: true, tag: 'Most Popular' },
-    { duration: '5 Hours', km: '50 KM', base: '₹1,200', extraRate: '₹12/km', isPopular: false, tag: 'Half Day' },
-    { duration: '8 Hours', km: '100 KM', base: '₹1,700', extraRate: '₹10/km', isPopular: false, tag: 'Full Day' },
-  ];
+
 
   return (
     <section id="pricing" className="py-24 bg-brand-charcoal/20 dark-blue-section relative overflow-hidden">
@@ -126,97 +120,6 @@ export default function Pricing() {
                   Book a Local Ride
                 </a>
               </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* PACKAGES TAB */}
-        {activeTab === 'package' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch mb-16">
-              {packagePlans.map((pkg, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
-                  transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className={`group relative flex flex-col justify-between p-6 rounded-3xl border transition-all duration-400 cursor-default ${
-                    pkg.isPopular
-                      ? 'glass-card glass-card-hover gold-gradient-border shadow-[0_15px_30px_rgba(255,212,59,0.08)] scale-100 lg:scale-[1.03]'
-                      : 'glass-card glass-card-hover border-white/5'
-                  }`}
-                >
-                  {pkg.isPopular && (
-                    <div className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-brand-yellow to-brand-gold text-brand-black px-3.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">
-                      {pkg.tag}
-                    </div>
-                  )}
-
-                  <div className="flex flex-col space-y-5">
-                    <div className="text-left">
-                      {!pkg.isPopular && (
-                        <span className="inline-block text-[9px] uppercase font-bold text-amber-700 dark:text-brand-yellow tracking-wider mb-1 bg-amber-500/10 dark:bg-brand-yellow/5 border border-amber-500/20 dark:border-brand-yellow/15 px-2 py-0.5 rounded-full">
-                          {pkg.tag}
-                        </span>
-                      )}
-                      <h3 className="text-xl font-black text-brand-white group-hover:text-brand-yellow transition-colors duration-300">
-                        {pkg.duration}
-                      </h3>
-                      <p className="text-[11px] text-brand-silver font-semibold mt-0.5">{pkg.km} included</p>
-                    </div>
-
-                    {/* Pricing block */}
-                    <div className="flex flex-col space-y-1 py-3 border-y border-white/5 text-left">
-                      <div className="flex items-baseline space-x-1">
-                        <span className="text-3xl font-black text-brand-white text-glow-yellow">{pkg.base}</span>
-                      </div>
-                      <div className="text-[10px] text-brand-gray font-semibold">
-                        Extra KM: <strong className="text-brand-white">{pkg.extraRate}</strong>
-                      </div>
-                    </div>
-
-                    {/* Features */}
-                    <ul className="flex flex-col space-y-2.5 text-left text-xs text-brand-silver/95 font-medium">
-                      <li className="flex items-center space-x-2">
-                        <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
-                          <Check className="w-3 h-3" />
-                        </div>
-                        <span className="text-[11px]">Duration: <strong className="text-brand-white">{pkg.duration}</strong></span>
-                      </li>
-                      <li className="flex items-center space-x-2">
-                        <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
-                          <Check className="w-3 h-3" />
-                        </div>
-                        <span className="text-[11px]">Included: <strong className="text-brand-white">{pkg.km}</strong></span>
-                      </li>
-                      <li className="flex items-center space-x-2">
-                        <div className="w-4.5 h-4.5 rounded-full bg-brand-yellow/10 border border-brand-yellow/20 flex items-center justify-center text-brand-yellow flex-shrink-0">
-                          <Check className="w-3 h-3" />
-                        </div>
-                        <span className="text-[11px]">Multiple stops allowed</span>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="mt-6 pt-3">
-                    <a
-                      href="#contact"
-                      className={`w-full flex items-center justify-center py-2.5 rounded-2xl font-extrabold text-xs tracking-wide transition-all duration-300 cursor-pointer ${
-                        pkg.isPopular
-                          ? 'bg-gradient-to-r from-brand-yellow to-brand-gold text-brand-black shadow-[0_4px_12px_rgba(255,212,59,0.2)] hover:shadow-[0_4px_20px_rgba(255,212,59,0.4)]'
-                          : 'bg-slate-100 dark:bg-brand-charcoal hover:bg-slate-200/80 dark:hover:bg-brand-charcoal/80 text-slate-700 dark:text-brand-white border border-slate-200/50 dark:border-white/5 hover:border-brand-yellow/30 dark:hover:border-brand-yellow/30'
-                      }`}
-                    >
-                      Book {pkg.duration} Package
-                    </a>
-                  </div>
-                </motion.div>
-              ))}
             </div>
           </motion.div>
         )}

@@ -80,9 +80,7 @@ export default function Hero() {
   };
 
   // Trip mode pricing
-  const [tripMode, setTripMode] = useState('local'); // local | package | outstation
-  const [selectedPackage, setSelectedPackage] = useState('4hr');
-  const [extraKm, setExtraKm] = useState(0);
+  const [tripMode, setTripMode] = useState('local'); // local | outstation
 
   const vehicleKeys = ['hatchback', 'sedan', 'suv', 'innova', 'tempo'];
 
@@ -107,27 +105,14 @@ export default function Hero() {
     setSelectedVehicle(vehicleKeys[nextIndex]);
   };
 
-  const packages = {
-    '2hr': { label: '2 Hr', km: 20, base: 600, extraRate: 12 },
-    '4hr': { label: '4 Hr', km: 40, base: 850, extraRate: 12 },
-    '5hr': { label: '5 Hr', km: 50, base: 1200, extraRate: 12 },
-    '8hr': { label: '8 Hr', km: 100, base: 1700, extraRate: 10 },
-  };
-
   const calculateEstimate = () => {
     if (tripMode === 'local') {
-      // Local: 4km base ₹150, extra ₹20/km
       let fare = 150;
       if (distance > 4) {
         fare += (distance - 4) * 20;
       }
       return fare;
-    } else if (tripMode === 'package') {
-      // Package: base fare + extra km beyond included
-      const pkg = packages[selectedPackage];
-      return pkg.base + (extraKm * pkg.extraRate);
     } else {
-      // Outstation: ₹10/km, minimum 300km
       const billableKm = Math.max(distance, 300);
       return billableKm * 10;
     }
@@ -352,10 +337,9 @@ export default function Hero() {
             </div>
 
             {/* Trip Mode Selector */}
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-2 gap-1.5">
               {[
                 { key: 'local', label: 'Local' },
-                { key: 'package', label: 'Package' },
                 { key: 'outstation', label: 'Outstation' }
               ].map((mode) => (
                 <button
@@ -411,48 +395,6 @@ export default function Hero() {
               </div>
             )}
 
-            {tripMode === 'package' && (
-              <div className="flex flex-col space-y-3">
-                {/* Package selector */}
-                <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(packages).map(([key, pkg]) => (
-                    <button
-                      key={key}
-                      onClick={() => setSelectedPackage(key)}
-                      className={`py-2.5 px-2 rounded-xl text-center font-bold cursor-pointer flex flex-col justify-center items-center transition-all border border-brand-yellow ${
-                        selectedPackage === key
-                          ? 'bg-brand-yellow/15 border-brand-yellow text-amber-800 dark:text-brand-yellow shadow-inner'
-                          : 'bg-white dark:bg-brand-charcoal border-slate-200/50 dark:border-white/5 text-slate-700 dark:text-brand-silver hover:bg-slate-50 dark:hover:bg-white/5'
-                      }`}
-                    >
-                      <span className="text-xs font-black">{pkg.label} / {pkg.km} KM</span>
-                      <span className="text-[10px] text-brand-gray font-semibold mt-0.5">₹{pkg.base}</span>
-                    </button>
-                  ))}
-                </div>
-                {/* Extra KM input */}
-                <div className="flex flex-col space-y-2">
-                  <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-brand-silver">
-                    <span>Extra KM beyond {packages[selectedPackage].km} km</span>
-                    <span className="text-amber-600 dark:text-brand-yellow font-extrabold text-sm">{extraKm} KM</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={extraKm}
-                    onChange={(e) => setExtraKm(Number(e.target.value))}
-                    className="w-full h-1.5 bg-slate-200 dark:bg-brand-charcoal rounded-lg appearance-none cursor-pointer accent-brand-yellow"
-                  />
-                  <div className="flex justify-between text-[10px] text-brand-gray">
-                    <span>0 km</span>
-                    <span>Extra @ ₹{packages[selectedPackage].extraRate}/km</span>
-                    <span>100 km</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {tripMode === 'outstation' && (
               <div className="flex flex-col space-y-3">
                 {/* Rate info */}
@@ -502,7 +444,6 @@ export default function Hero() {
                 </span>
                 <span className="block text-[9px] text-amber-700 dark:text-brand-yellow font-semibold">
                   {tripMode === 'local' && `Base ₹150 + ${Math.max(0, distance - 4)} extra km × ₹20`}
-                  {tripMode === 'package' && `${packages[selectedPackage].label} Package + ${extraKm} extra km`}
                   {tripMode === 'outstation' && `${Math.max(distance, 300)} km × ₹10/km`}
                 </span>
               </div>
@@ -516,8 +457,8 @@ export default function Hero() {
                 if (formEl) {
                   const messageInput = document.getElementById('booking-message');
                   if (messageInput) {
-                    const modeLabel = tripMode === 'local' ? 'Local' : tripMode === 'package' ? `Package (${packages[selectedPackage].label})` : 'Outstation';
-                    messageInput.value = `Fare estimate: ${modeLabel}. Distance: ${tripMode === 'package' ? packages[selectedPackage].km + '+' + extraKm : distance} KM. Est. Total: ₹${calculateEstimate()}`;
+                    const modeLabel = tripMode === 'local' ? 'Local' : 'Outstation';
+                    messageInput.value = `Fare estimate: ${modeLabel}. Distance: ${distance} KM. Est. Total: ₹${calculateEstimate()}`;
                   }
                   formEl.scrollIntoView({ behavior: 'smooth' });
                 }
